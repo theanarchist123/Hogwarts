@@ -57,11 +57,52 @@ export default function ReadBookPage() {
     }
   }
 
-  // Total chapters + cover
-  const allPages = [{ type: 'cover' }, ...(ebook?.chapters || []).map(ch => ({ type: 'chapter', chapter: ch }))]
-  const totalSpreads = Math.ceil(allPages.length / 2)
-  
-  const canGoNext = currentSpread < totalSpreads - 1
+  // Extract image from chapter content
+  const extractImage = (content: string) => {
+    const imageRegex = /!\[.*?\]\((https:\/\/image\.pollinations\.ai\/[^)]+)\)/
+    const match = content.match(imageRegex)
+    return match ? match[1] : null
+  }
+
+  // Remove image markdown from content
+  const removeImageFromContent = (content: string) => {
+    return content.replace(/!\[.*?\]\(https:\/\/image\.pollinations\.ai\/[^)]+\)\n\n/g, '')
+  }
+
+  // Build all pages: blank, cover, then for each chapter -> content page, then image page
+  const buildAllPages = () => {
+    // Start with blank page so cover appears on right side
+    const pages = [{ type: 'blank' }, { type: 'cover' }]
+    
+    ebook?.chapters?.forEach((chapter) => {
+      const chapterImage = extractImage(chapter.content)
+      const chapterText = removeImageFromContent(chapter.content)
+      
+      // Add content page
+      pages.push({
+        type: 'chapter-content',
+        chapter,
+        content: chapterText
+      })
+      
+      // Add image page if exists
+      if (chapterImage) {
+        pages.push({
+          type: 'chapter-image',
+          chapter,
+          image: chapterImage
+        })
+      }
+    })
+    
+    return pages
+  }
+
+  const allPagesExpanded = buildAllPages()
+  const totalSpreadsUpdated = Math.ceil(allPagesExpanded.length / 2)
+  const totalSpreads = totalSpreadsUpdated
+
+  const canGoNext = currentSpread < totalSpreadsUpdated - 1
   const canGoPrev = currentSpread > 0
 
   const nextSpread = () => {
@@ -89,7 +130,7 @@ export default function ReadBookPage() {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [currentSpread, totalSpreads, isFlipping])
+  }, [currentSpread, totalSpreadsUpdated, isFlipping])
 
   // Handle text selection for AI editing
   const handleTextSelection = (chapter: Chapter) => {
@@ -142,24 +183,12 @@ export default function ReadBookPage() {
     }
   }
 
-  // Extract image from chapter content
-  const extractImage = (content: string) => {
-    const imageRegex = /!\[.*?\]\((https:\/\/image\.pollinations\.ai\/[^)]+)\)/
-    const match = content.match(imageRegex)
-    return match ? match[1] : null
-  }
-
-  // Remove image markdown from content
-  const removeImageFromContent = (content: string) => {
-    return content.replace(/!\[.*?\]\(https:\/\/image\.pollinations\.ai\/[^)]+\)\n\n/g, '')
-  }
-
   // Get left and right pages for current spread
   const leftPageIndex = currentSpread * 2
   const rightPageIndex = currentSpread * 2 + 1
   
-  const leftPage = allPages[leftPageIndex]
-  const rightPage = allPages[rightPageIndex]
+  const leftPage = allPagesExpanded[leftPageIndex]
+  const rightPage = allPagesExpanded[rightPageIndex]
 
   if (loading) {
     return (
@@ -178,6 +207,13 @@ export default function ReadBookPage() {
         <div className="h-full bg-amber-50 flex items-center justify-center">
           <p className="text-gray-400 italic">End of book</p>
         </div>
+      )
+    }
+
+    // Blank page (for proper book layout)
+    if (page.type === 'blank') {
+      return (
+        <div className="h-full bg-amber-50"></div>
       )
     }
 
@@ -217,37 +253,48 @@ export default function ReadBookPage() {
       )
     }
 
-    // Chapter page
-    const chapter = page.chapter
-    const chapterImage = extractImage(chapter.content)
-    const chapterText = removeImageFromContent(chapter.content)
-
-    return (
-      <div className="h-full overflow-y-auto bg-amber-50/95 scrollbar-thin scrollbar-thumb-amber-400 scrollbar-track-amber-100">
-        {/* Chapter Image - Full width, scrolls naturally */}
-        {chapterImage && (
-          <div className="w-full bg-gray-900 flex items-center justify-center" style={{ minHeight: '300px', maxHeight: '45%' }}>
-            <img
-              src={chapterImage}
-              alt={chapter.title}
-              className="w-full h-auto object-contain"
-              style={{ maxHeight: '100%' }}
-            />
-          </div>
-        )}
-
-        {/* Chapter Content - with text selection for AI editing */}
-        <div 
-          className="p-6 user-select-text"
+    // Chapter content page - FULL PAGE
+    if (page.type === 'chapter-content') {
+      const chapter = page.chapter
+      const chapterText = page.content
+      
+      return (
+        <div className="h-full bg-amber-50/95 overflow-y-auto p-8 user-select-text scrollbar-thin scrollbar-thumb-amber-400 scrollbar-track-amber-100"
           onMouseUp={() => handleTextSelection(chapter)}
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-serif border-b-2 border-purple-900 pb-2">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4 font-serif border-b-2 border-purple-900 pb-2">
             {chapter.title}
           </h2>
-          <div className="prose prose-sm prose-amber max-w-none text-gray-800 font-serif chapter-text">
+          <div className="prose prose-base prose-amber max-w-none text-gray-800 font-serif chapter-text">
             <ReactMarkdown>{chapterText || '*No content yet*'}</ReactMarkdown>
           </div>
         </div>
+      )
+    }
+
+    // Chapter image page - FULL PAGE
+    if (page.type === 'chapter-image') {
+      const chapter = page.chapter
+      const chapterImage = page.image
+      
+      return (
+        <div className="h-full bg-gray-900 flex flex-col items-center justify-center p-6">
+          <img
+            src={chapterImage}
+            alt={chapter.title}
+            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+          />
+          <p className="text-white/60 text-sm mt-4 font-serif italic">
+            {chapter.title}
+          </p>
+        </div>
+      )
+    }
+
+    // Fallback
+    return (
+      <div className="h-full bg-amber-50 flex items-center justify-center">
+        <p className="text-gray-400 italic">Unknown page type</p>
       </div>
     )
   }

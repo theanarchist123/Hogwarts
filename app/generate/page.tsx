@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Navbar from '@/components/Navbar'
 import { Sparkles, Loader2, BookOpen, Wand2 } from 'lucide-react'
+import { FireworksBackground } from '@/components/animate-ui/components/backgrounds/fireworks'
 
 const EXAMPLE_PROMPTS = [
   "A gothic war romance between a battle-hardened general and a mysterious healer in a cursed kingdom",
@@ -69,8 +70,17 @@ export default function GenerateStoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="min-h-screen bg-background relative">
+      {/* Fireworks Background */}
+      <FireworksBackground 
+        className="absolute inset-0 z-0" 
+        color="white"
+        population={2}
+      />
+      
+      {/* Content Wrapper */}
+      <div className="relative z-10">
+        <Navbar />
       
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         <div className="text-center mb-12">
@@ -86,7 +96,7 @@ export default function GenerateStoryPage() {
           </p>
         </div>
 
-        <Card className="mb-8 shadow-sm">
+        <Card className="mb-8 shadow-sm bg-transparent backdrop-blur-sm border-border/40">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-2xl">
               <Wand2 className="h-6 w-6 text-primary" />
@@ -139,7 +149,7 @@ export default function GenerateStoryPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm">
+        <Card className="shadow-sm bg-transparent backdrop-blur-sm border-border/40">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BookOpen className="h-5 w-5" />
@@ -168,7 +178,7 @@ export default function GenerateStoryPage() {
           </CardContent>
         </Card>
 
-        <div className="mt-8 p-6 bg-muted/30 rounded-xl border border-border">
+        <div className="mt-8 p-6 bg-transparent backdrop-blur-sm rounded-xl border border-border/40">
           <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
             <Wand2 className="h-5 w-5 text-primary" />
             Tips for Best Results
@@ -196,6 +206,7 @@ export default function GenerateStoryPage() {
             </li>
           </ul>
         </div>
+      </div>
       </div>
     </div>
   )

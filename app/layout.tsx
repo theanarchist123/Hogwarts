@@ -2,6 +2,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import type { Metadata } from 'next'
+import { CursorProvider, Cursor } from '@/components/animate-ui/components/animate/cursor'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -23,7 +24,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="dark">
-        <body className={inter.variable}>{children}</body>
+        <body className={inter.variable}>
+          <CursorProvider global>
+            <Cursor className="text-primary" />
+            {children}
+          </CursorProvider>
+        </body>
       </html>
     </ClerkProvider>
   )
