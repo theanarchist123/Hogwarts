@@ -1,19 +1,25 @@
-import { NextResponse } from 'next/server'
-import { geminiService } from '@/lib/ai'
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import { textGenerator } from '@/lib/ai-providers'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { topic } = await req.json()
-
-    if (!topic) {
-      return NextResponse.json({ error: 'Topic is required' }, { status: 400 })
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const outline = await geminiService.generateOutline(topic)
+    const { prompt } = await req.json()
 
-    return NextResponse.json({ outline })
+    if (!prompt) {
+      return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
+    }
+
+    const outline = await textGenerator.generateStoryOutline(prompt)
+    
+    return NextResponse.json(outline)
   } catch (error) {
-    console.error('Error generating outline:', error)
+    console.error('Outline generation error:', error)
     return NextResponse.json(
       { error: 'Failed to generate outline' },
       { status: 500 }

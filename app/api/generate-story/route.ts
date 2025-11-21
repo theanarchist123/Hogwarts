@@ -1,9 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { geminiService, imagenService } from '@/lib/ai'
 import { ebookService, chapterService } from '@/lib/supabase'
-
-export const maxDuration = 300 // 5 minutes for story generation
+import { generateCompleteStory } from '@/lib/ai-providers'
 
 export async function POST(request: Request) {
   try {
@@ -13,8 +11,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { prompt } = await request.json()
-    
+    const body = await request.json()
+    const { prompt } = body
+
     if (!prompt || prompt.trim().length < 10) {
       return NextResponse.json(
         { error: 'Please provide a detailed story prompt (at least 10 characters)' },
@@ -22,61 +21,47 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generate the complete story with AI
-    const { outline, chapters } = await geminiService.generateCompleteStory(prompt)
+    // Generate complete story with AI (Groq + AI Horde)
+    const story = await generateCompleteStory(prompt)
 
-    // Create the ebook in database
-    const ebook = await ebookService.createEbook(userId, outline.title)
-    
-    // Generate cover image for the ebook
-    const coverPrompt = `Book cover for "${outline.title}" - ${outline.subtitle}. ${prompt.substring(0, 200)}. Professional book cover art, dramatic composition, title space at top`
-    const coverImageUrl = await imagenService.generateIllustration(coverPrompt)
-    
-    // Update ebook with subtitle, author, and cover image
+    // Create ebook in database
+    const ebook = await ebookService.createEbook(userId, story.title)
+
+    // Update ebook with story details
     await ebookService.updateEbook(ebook.id, {
-      subtitle: outline.subtitle,
-      author: outline.author,
-      cover_image_url: coverImageUrl,
+      title: story.title,
+      subtitle: story.subtitle,
+      cover_image_url: story.coverImageUrl,
     })
 
-    // Create all chapters with images in database
-    const createdChapters = []
-    for (let i = 0; i < chapters.length; i++) {
-      // Generate image prompt from chapter content
-      const imagePrompt = await imagenService.generateIllustrationPrompt(
-        chapters[i].title,
-        chapters[i].content
-      )
+    // Create chapters
+    for (const chapter of story.chapters) {
+      // Format chapter content with image
+      const content = `![${chapter.title}](${chapter.illustrationUrl})\n\n${chapter.content}`
       
-      // Generate image URL
-      const imageUrl = await imagenService.generateIllustration(imagePrompt)
-      
-      // Add image to chapter content (image at the top of each chapter)
-      const contentWithImage = `![${chapters[i].title}](${imageUrl})\n\n${chapters[i].content}`
-      
-      const chapter = await chapterService.createChapter(
+      await chapterService.createChapter(
         ebook.id,
-        chapters[i].title,
-        contentWithImage,
-        i + 1
+        chapter.title,
+        content,
+        chapter.number
       )
-      createdChapters.push(chapter)
     }
 
-    return NextResponse.json({
+    // Fetch the complete ebook with chapters
+    const completeEbook = await ebookService.getEbookById(ebook.id)
+
+    return NextResponse.json({ 
       success: true,
-      ebook: {
-        id: ebook.id,
-        title: outline.title,
-        subtitle: outline.subtitle,
-        author: outline.author,
-        chaptersCount: chapters.length,
-      },
+      ebook: completeEbook,
+      message: 'Story generated successfully!'
     })
   } catch (error) {
     console.error('Error generating story:', error)
     return NextResponse.json(
-      { error: 'Failed to generate story. Please try again.' },
+      { 
+        error: error instanceof Error ? error.message : 'Failed to generate story',
+        details: error instanceof Error ? error.stack : undefined
+      },
       { status: 500 }
     )
   }

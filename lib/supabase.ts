@@ -104,6 +104,17 @@ export const ebookService = {
 }
 
 export const chapterService = {
+  async getChaptersByEbookId(ebookId: string) {
+    const { data, error } = await supabaseServer
+      .from('chapters')
+      .select('*')
+      .eq('ebook_id', ebookId)
+      .order('order', { ascending: true })
+    
+    if (error) throw error
+    return data as Chapter[]
+  },
+
   async getChapterById(id: string) {
     const { data, error } = await supabaseServer
       .from('chapters')

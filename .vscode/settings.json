@@ -1,0 +1,40 @@
+{
+    "chat.mcp.serverSampling": {
+        "Hogwarts/.vscode/mcp.json: shadcn": {
+            "allowedModels": [
+                "anthropic/claude-opus-4-20250514",
+                "copilot/claude-3.5-sonnet",
+                "copilot/claude-3.7-sonnet",
+                "copilot/claude-3.7-sonnet-thought",
+                "anthropic/claude-sonnet-4-20250514",
+                "copilot/claude-sonnet-4",
+                "copilot/claude-sonnet-4.5",
+                "copilot/gpt-5-mini",
+                "openrouter/anthropic/claude-opus-4",
+                "openrouter/anthropic/claude-opus-4.1",
+                "openrouter/anthropic/claude-sonnet-4",
+                "copilot/auto",
+                "anthropic/claude-3-5-haiku-20241022",
+                "anthropic/claude-3-5-sonnet-20241022",
+                "anthropic/claude-3-7-sonnet-20250219",
+                "copilot/claude-haiku-4.5",
+                "copilot/gemini-2.0-flash-001",
+                "gemini/models/gemini-2.5-flash",
+                "gemini/models/gemini-2.5-pro",
+                "copilot/gemini-2.5-pro",
+                "copilot/gpt-3.5-turbo",
+                "copilot/gpt-4",
+                "copilot/gpt-4-0125-preview",
+                "copilot/gpt-4.1",
+                "copilot/gpt-4o",
+                "copilot/gpt-4o-mini",
+                "copilot/gpt-5",
+                "copilot/gpt-5-codex",
+                "copilot/grok-code-fast-1",
+                "copilot/o3-mini",
+                "copilot/o4-mini"
+            ]
+        }
+    },
+    "chat.mcp.autostart": "newAndOutdated"
+}

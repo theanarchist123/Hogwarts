@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import type { Ebook, Chapter } from '@/lib/supabase'
-import { BookOpen, Edit, Home, Maximize, Sparkles, X } from 'lucide-react'
+import { BookOpen, Edit, Home, Maximize, Sparkles, X, Download, Printer, Book, FileText } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 
 export default function ReadBookPage() {
@@ -277,6 +277,45 @@ export default function ReadBookPage() {
                 <Maximize className="h-4 w-4 mr-2" />
                 Fullscreen (F)
               </Button>
+              
+              {/* Export Dropdown */}
+              <div className="relative group">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/10"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                <div className="absolute right-0 top-full mt-1 bg-black/90 backdrop-blur-md rounded-lg shadow-xl border border-white/10 py-2 min-w-[160px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <a 
+                    href={`/print/${ebookId}`}
+                    target="_blank"
+                    className="flex items-center gap-3 px-4 py-2 text-white/90 hover:bg-white/10 transition"
+                  >
+                    <Printer className="h-4 w-4" />
+                    <span className="text-sm">Print/PDF</span>
+                  </a>
+                  <a 
+                    href={`/api/export/epub/${ebookId}`}
+                    download
+                    className="flex items-center gap-3 px-4 py-2 text-white/90 hover:bg-white/10 transition"
+                  >
+                    <Book className="h-4 w-4" />
+                    <span className="text-sm">EPUB</span>
+                  </a>
+                  <a 
+                    href={`/api/export/docx/${ebookId}`}
+                    download
+                    className="flex items-center gap-3 px-4 py-2 text-white/90 hover:bg-white/10 transition"
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span className="text-sm">DOCX</span>
+                  </a>
+                </div>
+              </div>
+              
               <Button
                 onClick={() => router.push('/dashboard')}
                 variant="ghost"

@@ -4,32 +4,67 @@
 
 @layer base {
   :root {
-    --background: 240 10% 6%;
-    --foreground: 0 0% 92%;
-    --card: 240 10% 10%;
-    --card-foreground: 0 0% 92%;
-    --popover: 240 10% 10%;
-    --popover-foreground: 0 0% 92%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 4% 15%;
-    --secondary-foreground: 0 0% 92%;
-    --muted: 240 5% 26%;
-    --muted-foreground: 240 5% 64%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 92%;
-    --border: 240 6% 20%;
-    --input: 240 6% 20%;
-    --ring: 217 91% 60%;
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 220.9 39.3% 11%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
     --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+  .theme {
+    --animate-marquee: marquee var(--duration) infinite linear;
+    --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  }
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 220.9 39.3% 11%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 216 12.2% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
     @apply bg-background text-foreground;
@@ -38,3 +73,248 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer utilities {
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee var(--duration) linear infinite;
+  }
+
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration) linear infinite;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+@theme inline {
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+/* Book Typography - Professional Print Quality */
+.book-prose {
+  /* Font stack with proper book typography */
+  font-family: 'Palatino', 'Baskerville', 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.65;
+  
+  /* Text rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Hyphenation for justified text */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  
+  /* Ligatures and kerning */
+  font-feature-settings: "liga" 1, "kern" 1, "onum" 1;
+  -webkit-font-feature-settings: "liga", "kern", "onum";
+  
+  /* Prevent orphans and widows */
+  orphans: 2;
+  widows: 2;
+  
+  color: hsl(var(--foreground));
+}
+
+.book-prose p {
+  margin: 0 0 0.75em;
+  text-indent: 1.5em;
+  text-align: justify;
+}
+
+.book-prose p:first-of-type,
+.book-prose p.no-indent {
+  text-indent: 0;
+}
+
+/* Drop cap for chapter openings */
+.book-prose .drop-cap::first-letter {
+  font-size: 3.5em;
+  line-height: 0.9;
+  float: left;
+  margin: 0.05em 0.1em 0 0;
+  font-weight: bold;
+  font-family: 'Garamond', 'Georgia', serif;
+}
+
+/* Chapter headings */
+.book-prose h1,
+.book-prose h2 {
+  font-family: 'Garamond', 'Baskerville', 'Georgia', serif;
+  font-weight: normal;
+  text-align: center;
+  margin: 2em 0 1em;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.book-prose h1 {
+  font-size: 2em;
+  margin-top: 3em;
+}
+
+.book-prose h2 {
+  font-size: 1.5em;
+}
+
+/* Small caps for emphasis */
+.book-prose .small-caps {
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+}
+
+/* Print-ready page setup */
+@media print {
+  .book-prose {
+    font-size: 11pt;
+  }
+  
+  @page {
+    size: 6in 9in; /* Trade paperback */
+    margin: 0.75in 0.625in;
+  }
+  
+  .book-prose h1,
+  .book-prose h2 {
+    page-break-before: always;
+  }
+  
+  .book-prose img {
+    page-break-inside: avoid;
+  }
+}
+
+/* Theme variations */
+.theme-paper {
+  --book-bg: #fefefe;
+  --book-fg: #1a1a1a;
+}
+
+.theme-sepia {
+  --book-bg: #f4ecd8;
+  --book-fg: #5c4a2e;
+}
+
+.theme-night {
+  --book-bg: #1e1e1e;
+  --book-fg: #e0e0e0;
+}
+
+.theme-dyslexia {
+  font-family: 'OpenDyslexic', 'Arial', sans-serif;
+  font-size: 18px;
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  word-spacing: 0.16em;
+  text-align: left;
+}
+
+.book-prose.theme-paper,
+.book-prose.theme-sepia,
+.book-prose.theme-night {
+  background-color: var(--book-bg);
+  color: var(--book-fg);
+}
+
+/* Page layout for flip book reader */
+.page-spread {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.page-single {
+  flex: 1;
+  padding: 3rem 2.5rem;
+  background: var(--book-bg, white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  position: relative;
+}
+
+/* Running heads (header with chapter title + page number) */
+.running-head {
+  position: absolute;
+  top: 1.5rem;
+  left: 2.5rem;
+  right: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Garamond', 'Georgia', serif;
+  font-size: 0.85em;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+}
+
+.running-head.left .folio {
+  order: -1;
+}
+
+.running-head.right .folio {
+  order: 1;
+}
+
+/* Folio (page number) */
+.folio {
+  font-variant-numeric: oldstyle-nums;
+}
+
+/* Full-bleed images */
+.full-bleed {
+  margin: 0 -2.5rem;
+  width: calc(100% + 5rem);
+  max-width: none;
+}
+
+/* Image captions */
+.image-caption {
+  font-size: 0.85em;
+  font-style: italic;
+  text-align: center;
+  margin: 0.5em 0 1.5em;
+  color: hsl(var(--muted-foreground));
+}

@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, BookOpen, Edit, Trash2, Sparkles } from 'lucide-react'
+import { Plus, BookOpen, Edit, Trash2, Sparkles, Download, FileText, Book, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import type { Ebook } from '@/lib/supabase'
@@ -64,25 +64,25 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold">My Ebooks</h1>
-            <p className="text-muted-foreground mt-2">
-              Create and manage your AI-powered ebooks
+            <h1 className="text-4xl font-bold tracking-tight">My Ebooks</h1>
+            <p className="text-muted-foreground mt-2 text-lg">
+              Create and manage your AI-powered storybooks
             </p>
           </div>
           <div className="flex gap-3">
             <Link href="/generate">
-              <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+              <Button size="lg" className="shadow-sm">
                 <Sparkles className="mr-2 h-5 w-5" />
                 Generate Story with AI
               </Button>
             </Link>
-            <Button onClick={handleCreateEbook} size="lg">
+            <Button onClick={handleCreateEbook} size="lg" variant="outline" className="shadow-sm">
               <Plus className="mr-2 h-5 w-5" />
               Create Blank Ebook
             </Button>
@@ -91,25 +91,36 @@ export default function DashboardPage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Loading your ebooks...</p>
+            <div className="inline-flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+              <p className="text-muted-foreground">Loading your ebooks...</p>
+            </div>
           </div>
         ) : ebooks.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-border rounded-lg">
-            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No ebooks yet</h3>
-            <p className="text-muted-foreground mb-6">
-              Create your first ebook to get started
+          <div className="text-center py-20 border border-dashed border-border rounded-xl bg-muted/30">
+            <BookOpen className="h-20 w-20 text-muted-foreground mx-auto mb-6 opacity-50" />
+            <h3 className="text-2xl font-semibold mb-3">No ebooks yet</h3>
+            <p className="text-muted-foreground mb-8 text-lg">
+              Create your first AI-powered storybook to get started
             </p>
-            <Button onClick={handleCreateEbook}>
-              <Plus className="mr-2 h-5 w-5" />
-              Create Your First Ebook
-            </Button>
+            <div className="flex gap-3 justify-center">
+              <Link href="/generate">
+                <Button size="lg">
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Generate with AI
+                </Button>
+              </Link>
+              <Button onClick={handleCreateEbook} size="lg" variant="outline">
+                <Plus className="mr-2 h-5 w-5" />
+                Create Blank Ebook
+              </Button>
+            </div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {ebooks.map(ebook => (
-              <Card key={ebook.id} className="overflow-hidden hover:border-primary/50 transition-colors">
-                <div className="aspect-[3/4] bg-secondary flex items-center justify-center">
+              <Card key={ebook.id} className="overflow-hidden hover:border-primary/50 transition-all duration-200 hover:shadow-lg">
+                <div className="aspect-[3/4] bg-muted flex items-center justify-center border-b">
                   {ebook.cover_image_url ? (
                     <img
                       src={ebook.cover_image_url}
@@ -117,35 +128,74 @@ export default function DashboardPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <BookOpen className="h-16 w-16 text-muted-foreground" />
+                    <BookOpen className="h-20 w-20 text-muted-foreground opacity-30" />
                   )}
                 </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg truncate">{ebook.title}</h3>
+                <CardContent className="p-5">
+                  <h3 className="font-semibold text-lg truncate mb-1">{ebook.title}</h3>
                   {ebook.subtitle && (
-                    <p className="text-sm text-muted-foreground truncate mt-1">
+                    <p className="text-sm text-muted-foreground truncate mb-3">
                       {ebook.subtitle}
                     </p>
                   )}
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {ebook.chapters?.length || 0} chapters
-                  </p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                    <BookOpen className="h-3.5 w-3.5" />
+                    <span>{ebook.chapters?.length || 0} chapters</span>
+                  </div>
+                  
+                  {/* Export Buttons */}
+                  <div className="flex gap-1 mb-2">
+                    <a 
+                      href={`/print/${ebook.id}`}
+                      target="_blank"
+                      className="flex-1"
+                      title="Print/Save as PDF"
+                    >
+                      <Button variant="ghost" size="sm" className="w-full text-xs h-8">
+                        <Printer className="mr-1.5 h-3.5 w-3.5" />
+                        PDF
+                      </Button>
+                    </a>
+                    <a 
+                      href={`/api/export/epub/${ebook.id}`}
+                      download
+                      className="flex-1"
+                      title="Download EPUB"
+                    >
+                      <Button variant="ghost" size="sm" className="w-full text-xs h-8">
+                        <Book className="mr-1.5 h-3.5 w-3.5" />
+                        EPUB
+                      </Button>
+                    </a>
+                    <a 
+                      href={`/api/export/docx/${ebook.id}`}
+                      download
+                      className="flex-1"
+                      title="Download DOCX"
+                    >
+                      <Button variant="ghost" size="sm" className="w-full text-xs h-8">
+                        <FileText className="mr-1.5 h-3.5 w-3.5" />
+                        DOCX
+                      </Button>
+                    </a>
+                  </div>
                 </CardContent>
-                <CardFooter className="p-4 pt-0 flex gap-2">
+                <CardFooter className="p-5 pt-0 flex gap-2">
                   <Link href={`/read/${ebook.id}`} className="flex-1">
-                    <Button variant="default" className="w-full bg-purple-600 hover:bg-purple-700">
+                    <Button variant="default" className="w-full shadow-sm">
                       <BookOpen className="mr-2 h-4 w-4" />
                       Read
                     </Button>
                   </Link>
                   <Link href={`/editor/${ebook.id}`}>
-                    <Button variant="outline" size="icon">
+                    <Button variant="outline" size="icon" className="shadow-sm">
                       <Edit className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Button
                     variant="outline"
                     size="icon"
+                    className="shadow-sm hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
                     onClick={() => handleDeleteEbook(ebook.id)}
                   >
                     <Trash2 className="h-4 w-4" />

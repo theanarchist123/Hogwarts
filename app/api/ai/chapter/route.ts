@@ -1,22 +1,31 @@
-import { NextResponse } from 'next/server'
-import { geminiService } from '@/lib/ai'
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import { textGenerator } from '@/lib/ai-providers'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { title, outline, previousChapter } = await req.json()
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
-    if (!title || !outline) {
+    const { chapterInfo, previousContext, genre } = await req.json()
+
+    if (!chapterInfo?.title || !chapterInfo?.summary) {
       return NextResponse.json(
-        { error: 'Title and outline are required' },
+        { error: 'Chapter info (title and summary) is required' },
         { status: 400 }
       )
     }
 
-    const content = await geminiService.generateChapter(title, outline, previousChapter)
+    const result = await textGenerator.generateChapter(
+      { ...chapterInfo, genre: genre || 'fantasy' },
+      previousContext
+    )
 
-    return NextResponse.json({ content })
+    return NextResponse.json(result)
   } catch (error) {
-    console.error('Error generating chapter:', error)
+    console.error('Chapter generation error:', error)
     return NextResponse.json(
       { error: 'Failed to generate chapter' },
       { status: 500 }
