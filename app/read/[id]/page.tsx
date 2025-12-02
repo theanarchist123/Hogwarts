@@ -6,7 +6,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import type { Ebook, Chapter } from '@/lib/supabase'
-import { BookOpen, Edit, Home, Maximize, Sparkles, X, Download, Printer, Book, FileText } from 'lucide-react'
+import { BookOpen, Edit, Home, Maximize, X, Download, Printer, Book, FileText } from 'lucide-react'
+import { Sparkles } from '@/components/animate-ui/icons/sparkles'
 import ReactMarkdown from 'react-markdown'
 
 export default function ReadBookPage() {
@@ -306,7 +307,7 @@ export default function ReadBookPage() {
         <div className="bg-black/50 backdrop-blur-sm border-b border-white/10">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <BookOpen className="h-6 w-6 text-white/90" />
+              <BookOpen className="h-6 w-6 text-white/90" animateOnHover />
               <div>
                 <h1 className="text-lg font-bold text-white">{ebook?.title}</h1>
                 <p className="text-white/60 text-xs">
@@ -473,7 +474,7 @@ export default function ReadBookPage() {
             {/* Header */}
             <div className="bg-purple-900 text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
+                <Sparkles size={20} animateOnHover />
                 <h3 className="font-bold text-lg">AI Content Editor</h3>
               </div>
               <button
@@ -550,7 +551,7 @@ export default function ReadBookPage() {
                   disabled={!editInstruction.trim() || isEditing}
                   className="bg-purple-900 hover:bg-purple-800"
                 >
-                  <Sparkles className="mr-2 h-4 w-4" />
+                  <Sparkles size={16} animateOnHover className="mr-2" />
                   {isEditing ? 'Improving...' : 'Improve Content'}
                 </Button>
               </div>

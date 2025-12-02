@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Home } from 'lucide-react'
+import { Home } from 'lucide-react'
+import { ChevronLeft } from '@/components/animate-ui/icons/chevron-left'
+import { ChevronRight } from '@/components/animate-ui/icons/chevron-right'
 import type { Ebook, Chapter } from '@/lib/supabase'
 
 export default function BookPage() {
@@ -92,7 +94,7 @@ export default function BookPage() {
               onClick={() => setCurrentChapterIndex(prev => Math.max(0, prev - 1))}
               disabled={currentChapterIndex === 0}
             >
-              <ChevronLeft className="h-4 w-4 mr-1" />
+              <ChevronLeft className="h-4 w-4 mr-1" animateOnHover />
               Previous
             </Button>
             <Button
@@ -102,7 +104,7 @@ export default function BookPage() {
               disabled={currentChapterIndex === chapters.length - 1}
             >
               Next
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <ChevronRight className="h-4 w-4 ml-1" animateOnHover />
             </Button>
           </div>
         </div>

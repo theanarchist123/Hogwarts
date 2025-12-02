@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Navbar from '@/components/Navbar'
-import { Sparkles, Loader2, BookOpen, Wand2 } from 'lucide-react'
-import { FireworksBackground } from '@/components/animate-ui/components/backgrounds/fireworks'
+import { BookOpen, Wand2 } from 'lucide-react'
+import { Sparkles } from '@/components/animate-ui/icons/sparkles'
+import { Loader } from '@/components/animate-ui/icons/loader'
+import { GravityStarsBackground } from '@/components/animate-ui/components/backgrounds/gravity-stars'
 
 const EXAMPLE_PROMPTS = [
   "A gothic war romance between a battle-hardened general and a mysterious healer in a cursed kingdom",
@@ -71,11 +73,9 @@ export default function GenerateStoryPage() {
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Fireworks Background */}
-      <FireworksBackground 
-        className="absolute inset-0 z-0" 
-        color="white"
-        population={2}
+      {/* Gravity Stars Background */}
+      <GravityStarsBackground 
+        className="absolute inset-0 z-0"
       />
       
       {/* Content Wrapper */}
@@ -85,7 +85,7 @@ export default function GenerateStoryPage() {
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm font-medium text-primary mb-6">
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4" animateOnHover />
             AI Story Generator
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
@@ -123,12 +123,12 @@ export default function GenerateStoryPage() {
             >
               {generating ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  <Loader className="mr-2 h-5 w-5" loop />
                   Generating Your Story...
                 </>
               ) : (
                 <>
-                  <Sparkles className="mr-2 h-5 w-5" />
+                  <Sparkles className="mr-2 h-5 w-5" animateOnHover />
                   Generate Complete Story
                 </>
               )}
@@ -137,7 +137,7 @@ export default function GenerateStoryPage() {
             {generating && (
               <div className="p-6 bg-primary/5 rounded-xl border border-primary/20">
                 <div className="flex items-center justify-center gap-3 mb-3">
-                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  <Loader className="h-5 w-5 text-primary" loop />
                   <p className="text-center text-lg font-semibold">{progress}</p>
                 </div>
                 <p className="text-center text-sm text-muted-foreground">

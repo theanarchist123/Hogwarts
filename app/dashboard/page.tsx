@@ -3,7 +3,10 @@
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, BookOpen, Edit, Trash2, Sparkles, Download, FileText, Book, Printer } from 'lucide-react'
+import { BookOpen, Edit, Download, FileText, Book, Printer } from 'lucide-react'
+import { Plus } from '@/components/animate-ui/icons/plus'
+import { Trash } from '@/components/animate-ui/icons/trash'
+import { Sparkles } from '@/components/animate-ui/icons/sparkles'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import type { Ebook } from '@/lib/supabase'
@@ -83,7 +86,7 @@ export default function DashboardPage() {
               </Button>
             </Link>
             <Button onClick={handleCreateEbook} size="lg" variant="outline" className="shadow-sm">
-              <Plus className="mr-2 h-5 w-5" />
+              <Plus className="mr-2 h-5 w-5" animateOnHover />
               Create Blank Ebook
             </Button>
           </div>
@@ -111,7 +114,7 @@ export default function DashboardPage() {
                 </Button>
               </Link>
               <Button onClick={handleCreateEbook} size="lg" variant="outline">
-                <Plus className="mr-2 h-5 w-5" />
+                <Plus className="mr-2 h-5 w-5" animateOnHover />
                 Create Blank Ebook
               </Button>
             </div>
@@ -198,7 +201,7 @@ export default function DashboardPage() {
                     className="shadow-sm hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
                     onClick={() => handleDeleteEbook(ebook.id)}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash className="h-4 w-4" animateOnHover />
                   </Button>
                 </CardFooter>
               </Card>

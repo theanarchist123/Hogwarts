@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { Sparkles, Image as ImageIcon, FileText, Wand2, BookMarked, Zap } from 'lucide-react'
+import { Image as ImageIcon, FileText, Wand2, BookMarked, Zap } from 'lucide-react'
+import { Sparkles } from '@/components/animate-ui/icons/sparkles'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { TestimonialsMarquee } from '@/components/TestimonialsMarquee'
 import { StarsBackground } from '@/components/animate-ui/components/backgrounds/stars'
@@ -51,7 +52,7 @@ export default function Home() {
       <section className="container mx-auto px-4 py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm font-medium text-primary mb-4">
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4" animateOnHover />
             AI-Powered Story Creation
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
@@ -66,7 +67,7 @@ export default function Home() {
             <SignedOut>
               <Link href="/sign-up">
                 <Button size="lg" className="text-lg px-8">
-                  <Sparkles className="mr-2 h-5 w-5" />
+                  <Sparkles className="mr-2 h-5 w-5" animateOnHover />
                   Start Creating Free
                 </Button>
               </Link>
@@ -102,7 +103,7 @@ export default function Home() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           <FeatureFlipCard
-            icon={<Sparkles className="h-10 w-10 text-primary" />}
+            icon={<Sparkles className="h-10 w-10 text-primary" animateOnHover />}
             title="Complete Story Generation"
             description="Describe your story idea (genre, theme, characters). AI creates 5-7 chapters with engaging narratives automatically."
             backContent="✨ Powered by advanced AI language models that understand storytelling structure, character development, and narrative flow. Your ideas transform into professionally written stories in seconds!"
@@ -152,7 +153,7 @@ export default function Home() {
           <SignedOut>
             <Link href="/sign-up">
               <Button size="lg" className="text-lg px-12">
-                <Sparkles className="mr-2 h-5 w-5" />
+                <Sparkles className="mr-2 h-5 w-5" animateOnHover />
                 Get Started Free
               </Button>
             </Link>
@@ -160,7 +161,7 @@ export default function Home() {
           <SignedIn>
             <Link href="/generate">
               <Button size="lg" className="text-lg px-12">
-                <Sparkles className="mr-2 h-5 w-5" />
+                <Sparkles className="mr-2 h-5 w-5" animateOnHover />
                 Generate Your First Story
               </Button>
             </Link>
