@@ -139,11 +139,10 @@ function CursorProvider({ children, global = false }: CursorProviderProps) {
 
 type CursorContainerProps = WithAsChild<HTMLMotionProps<'div'>>;
 
-function CursorContainer({
-  ref,
+const CursorContainer = React.forwardRef<HTMLDivElement, CursorContainerProps>(({
   asChild = false,
   ...props
-}: CursorContainerProps) {
+}, ref) => {
   const { containerRef, global, active } = useCursor();
   React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
 
@@ -158,7 +157,9 @@ function CursorContainer({
       {...props}
     />
   );
-}
+});
+
+CursorContainer.displayName = 'CursorContainer';
 
 type CursorProps = WithAsChild<
   HTMLMotionProps<'div'> & {
@@ -166,7 +167,7 @@ type CursorProps = WithAsChild<
   }
 >;
 
-function Cursor({ ref, asChild = false, style, ...props }: CursorProps) {
+const Cursor = React.forwardRef<HTMLDivElement, CursorProps>(({ asChild = false, style, ...props }, ref) => {
   const { cursorPos, active, containerRef, cursorRef, global } = useCursor();
   React.useImperativeHandle(ref, () => cursorRef.current as HTMLDivElement);
 
@@ -223,7 +224,7 @@ function Cursor({ ref, asChild = false, style, ...props }: CursorProps) {
       )}
     </AnimatePresence>
   );
-}
+});
 
 type CursorFollowSide = 'top' | 'right' | 'bottom' | 'left';
 type CursorFollowAlign = 'start' | 'center' | 'end';
@@ -239,9 +240,7 @@ type CursorFollowProps = WithAsChild<
   }
 >;
 
-function CursorFollow({
-  ref,
-  asChild = false,
+const CursorFollow = React.forwardRef<HTMLDivElement, CursorFollowProps>(({  asChild = false,
   side = 'bottom',
   sideOffset = 0,
   align = 'end',
@@ -249,7 +248,7 @@ function CursorFollow({
   style,
   transition = { stiffness: 500, damping: 50, bounce: 0 },
   ...props
-}: CursorFollowProps) {
+}, ref) => {
   const { cursorPos, active, cursorRef, global } = useCursor();
   const cursorFollowRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(
@@ -373,7 +372,9 @@ function CursorFollow({
       )}
     </AnimatePresence>
   );
-}
+});
+
+CursorFollow.displayName = 'CursorFollow';
 
 export {
   CursorProvider,

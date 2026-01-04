@@ -71,9 +71,19 @@ export default function ReadBookPage() {
   }
 
   // Build all pages: blank, cover, then for each chapter -> content page, then image page
-  const buildAllPages = () => {
+  const buildAllPages = (): Array<{
+    type: string;
+    chapter?: Chapter;
+    content?: string;
+    image?: string;
+  }> => {
     // Start with blank page so cover appears on right side
-    const pages = [{ type: 'blank' }, { type: 'cover' }]
+    const pages: Array<{
+      type: string;
+      chapter?: Chapter;
+      content?: string;
+      image?: string;
+    }> = [{ type: 'blank' }, { type: 'cover' }]
     
     ebook?.chapters?.forEach((chapter) => {
       const chapterImage = extractImage(chapter.content)
@@ -307,7 +317,7 @@ export default function ReadBookPage() {
         <div className="bg-black/50 backdrop-blur-sm border-b border-white/10">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <BookOpen className="h-6 w-6 text-white/90" animateOnHover />
+              <BookOpen className="h-6 w-6 text-white/90" />
               <div>
                 <h1 className="text-lg font-bold text-white">{ebook?.title}</h1>
                 <p className="text-white/60 text-xs">

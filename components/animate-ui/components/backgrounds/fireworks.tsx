@@ -210,8 +210,7 @@ type FireworksBackgroundProps = Omit<React.ComponentProps<'div'>, 'color'> & {
   particleSize?: { min: number; max: number } | number;
 };
 
-function FireworksBackground({
-  ref,
+const FireworksBackground = React.forwardRef<HTMLDivElement, FireworksBackgroundProps>(({
   className,
   canvasProps,
   population = 1,
@@ -221,7 +220,7 @@ function FireworksBackground({
   particleSpeed = { min: 2, max: 7 },
   particleSize = { min: 1, max: 5 },
   ...props
-}: FireworksBackgroundProps) {
+}, ref) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
@@ -361,6 +360,8 @@ function FireworksBackground({
       />
     </div>
   );
-}
+});
+
+FireworksBackground.displayName = 'FireworksBackground';
 
 export { FireworksBackground, type FireworksBackgroundProps };
